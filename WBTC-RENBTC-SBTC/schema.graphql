@@ -1,0 +1,168 @@
+type Transaction @entity { 
+  id: ID!
+  count: BigInt!
+  hash: String!
+  index: BigInt!
+  from: String
+  to: String!
+  gas_used: BigInt!
+  gas_price: BigInt!
+
+  trade: Trade!
+  deposit: Deposit!
+  withdrawal: Withdrawal!
+  pool: Pool!
+}
+
+type Trade @entity {
+  id: ID!
+  count: BigInt!
+  address: Bytes!
+  origin: Token!
+  origin_amount: BigDecimal!
+  origin_amount_numeraire: BigDecimal
+  target: Token!
+  target_amount: BigDecimal!
+  target_amount_numeraire: BigDecimal
+  timestamp: BigInt!
+
+  transaction: Transaction!
+  parametersSet: ParametersSet!
+  pool: Pool!
+  utility_frame: UtilityFrame!
+}
+
+type Deposit @entity {
+  id: ID!
+  count: BigInt!
+  type: String!
+  amounts: [BigDecimal!]!
+  amounts_numeraire: [BigDecimal!]!
+  tokens: [Token!]!
+  lp_shares: BigDecimal
+  lp_shares_total: BigDecimal
+  timestamp: BigInt!
+
+  transaction: Transaction!
+  parametersSet: ParametersSet!
+  pool: String!
+  utility_frame: UtilityFrame!
+}
+
+type Withdrawal @entity {
+  id: ID!
+  count: BigInt!
+  type: String!
+  amounts: [BigDecimal!]!
+  amounts_numeraire: [BigDecimal!]
+  tokens: [Token!]!
+  lp_shares: BigDecimal
+  lp_shares_total: BigDecimal
+  timestamp: BigInt!
+
+  transaction: Transaction!
+  parametersSet: ParametersSet!
+  pool: Pool!
+  utility_frame: UtilityFrame!
+}
+
+type Pool @entity {
+  id: ID!
+  reserves: [Token!]
+  numeraires: [Token!]
+  parametersSet: ParametersSet
+}
+
+type ParametersSet @entity {
+  id: ID!
+  count: BigInt!
+  alpha: BigDecimal!
+  beta: BigDecimal!
+  delta: BigDecimal!
+  epsilon: BigDecimal!
+  lambda: BigDecimal!
+  weights: [BigDecimal!]!
+  timestamp: BigInt!
+  
+  pool: Pool!
+}
+
+type Parameters @entity {
+  id: ID!
+  alpha: BigDecimal!
+  beta: BigDecimal!
+  delta: BigDecimal!
+  epsilon: BigDecimal!
+  lambda: BigDecimal!
+  weights: [ BigDecimal! ]!
+  parametersSet: ParametersSet!
+}
+
+type Token @entity {
+  id: ID!
+  decimals: Int!
+  name: String!
+  symbol: String!
+  
+  pool: Pool!
+}
+
+type WeightTracker @entity {
+  id: ID!
+  timestamp: BigInt!
+  weights: [BigDecimal!]!
+}
+
+type UtilityFrame @entity {
+    id: ID!
+    block: BigInt
+    count: BigInt
+    first: Boolean
+    pool: Pool
+    timestamp: BigInt
+    preceding_liquidity: [ BigDecimal! ]
+    preceding_parameters: Parameters
+    preceding_lp_shares: BigDecimal
+    proceeding_liquidity: [ BigDecimal! ]
+    proceeding_parameters: Parameters
+    proceeding_lp_shares: BigDecimal
+}
+
+type ParametersSetCounter @entity {
+  id: ID!
+  count: BigInt!
+}
+
+type TransactionCounter @entity {
+  id: ID!
+  count: BigInt!
+}
+
+type DepositCounter @entity {
+  id: ID!
+  count: BigInt!
+}
+
+type WithdrawalCounter @entity {
+  id: ID!
+  count: BigInt!
+}
+
+type TradeCounter @entity {
+  id: ID!
+  count: BigInt!
+}
+
+type UtilityTimestamp @entity {
+  id: ID!
+  timestamp: BigInt!
+}
+
+type UtilityCounter @entity {
+  id: ID!
+  count: BigInt!
+}
+
+
+
+
