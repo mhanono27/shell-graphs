@@ -19,13 +19,10 @@ export class Transaction extends Entity {
     this.set("count", Value.fromBigInt(BigInt.zero()));
     this.set("hash", Value.fromString(""));
     this.set("index", Value.fromBigInt(BigInt.zero()));
+    this.set("from", Value.fromString(""));
     this.set("to", Value.fromString(""));
     this.set("gas_used", Value.fromBigInt(BigInt.zero()));
     this.set("gas_price", Value.fromBigInt(BigInt.zero()));
-    this.set("trade", Value.fromString(""));
-    this.set("deposit", Value.fromString(""));
-    this.set("withdrawal", Value.fromString(""));
-    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -81,21 +78,13 @@ export class Transaction extends Entity {
     this.set("index", Value.fromBigInt(value));
   }
 
-  get from(): string | null {
+  get from(): string {
     let value = this.get("from");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
-  set from(value: string | null) {
-    if (!value) {
-      this.unset("from");
-    } else {
-      this.set("from", Value.fromString(<string>value));
-    }
+  set from(value: string) {
+    this.set("from", Value.fromString(value));
   }
 
   get to(): string {
@@ -123,42 +112,6 @@ export class Transaction extends Entity {
 
   set gas_price(value: BigInt) {
     this.set("gas_price", Value.fromBigInt(value));
-  }
-
-  get trade(): string {
-    let value = this.get("trade");
-    return value!.toString();
-  }
-
-  set trade(value: string) {
-    this.set("trade", Value.fromString(value));
-  }
-
-  get deposit(): string {
-    let value = this.get("deposit");
-    return value!.toString();
-  }
-
-  set deposit(value: string) {
-    this.set("deposit", Value.fromString(value));
-  }
-
-  get withdrawal(): string {
-    let value = this.get("withdrawal");
-    return value!.toString();
-  }
-
-  set withdrawal(value: string) {
-    this.set("withdrawal", Value.fromString(value));
-  }
-
-  get pool(): string {
-    let value = this.get("pool");
-    return value!.toString();
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
   }
 }
 
@@ -789,7 +742,6 @@ export class ParametersSet extends Entity {
     this.set("lambda", Value.fromBigDecimal(BigDecimal.zero()));
     this.set("weights", Value.fromBigDecimalArray(new Array(0)));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
-    this.set("pool", Value.fromString(""));
   }
 
   save(): void {
@@ -888,15 +840,6 @@ export class ParametersSet extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
-  }
-
-  get pool(): string {
-    let value = this.get("pool");
-    return value!.toString();
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
   }
 }
 
@@ -1151,8 +1094,8 @@ export class UtilityFrame extends Entity {
     }
   }
 
-  static load(id: string): UtilityFrame {
-    return changetype<UtilityFrame>(store.get("UtilityFrame", id));
+  static load(id: string): UtilityFrame | null {
+    return changetype<UtilityFrame | null>(store.get("UtilityFrame", id));
   }
 
   get id(): string {
