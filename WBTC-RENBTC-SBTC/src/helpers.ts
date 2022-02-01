@@ -1,18 +1,16 @@
 import { ethereum, Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts"
 
+import { ERC20 } from "../generated/Shell/ERC20"
+import { cERC20 } from "../generated/Shell/cERC20"
 import { Shell } from "../generated/Shell/Shell"
 
 import {
-    Transaction,
-    Trade,
-    Deposit, 
-    Withdrawal,
-    Pool,
-    ParametersSet,
+    Criterion,
     Token,
-    WeightTracker,
+    Transaction,
+    Pool,
+    UtilityFrame,
     Parameters,
-    UtilityFrame
 } from "../generated/schema"
 
 import {
@@ -26,7 +24,7 @@ import {
 
 import { SHELL, ONE } from "./constants"
 
-export function getPool () : Pool{
+export function getPool () : Pool|null {
     let pool = Pool.load(SHELL)
     if (pool == null) pool = new Pool(SHELL) 
     return pool
@@ -48,15 +46,15 @@ export function saveTransaction (_tx: ethereum.Transaction) : void {
 export function saveParameters (timestamp: BigInt) : void {
     let parameters = Parameters.load(timestamp.toString())
     if (parameters == null) {
-        let parametersSet = ParametersSet.load(readCriterionCount())
+        let criterion = Criterion.load(readCriterionCount())
         parameters = new Parameters(timestamp.toString())
-        parameters.parametersSet = parametersSet.id
-        parameters.alpha = parametersSet.alpha
-        parameters.beta = parametersSet.beta
-        parameters.delta = parametersSet.delta
-        parameters.epsilon = parametersSet.epsilon
-        parameters.lambda = parametersSet.lambda
-        parameters.weights = parametersSet.weights
+        parameters.criterion = criterion.id
+        parameters.alpha = criterion.alpha
+        parameters.beta = criterion.beta
+        parameters.delta = criterion.delta
+        parameters.epsilon = criterion.epsilon
+        parameters.lambda = criterion.lambda
+        parameters.weights = criterion.weights
     }
     parameters.save()
 }
@@ -105,7 +103,6 @@ export function getNumeraireBalance (reserveAddr: string) : BigDecimal {
     return new BigDecimal(new BigInt(0)) // satisfy function signature
 
 }
-
 
 export function getShellSupply () : BigDecimal {
     let shell = Shell.bind(Address.fromHexString(SHELL) as Address)

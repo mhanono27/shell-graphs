@@ -1,5 +1,5 @@
 import {
-  ParametersSetCounter,
+  CriterionCounter,
   DepositCounter,
   WithdrawalCounter,
   TradeCounter,
@@ -12,12 +12,12 @@ import { BigInt } from "@graphprotocol/graph-ts"
 import { ONE } from "./constants"
 
 export function countCriterion () : BigInt {
-  let parametersSetCounter = ParametersSetCounter.load('1')
-  if (parametersSetCounter == null) ( parametersSetCounter = new ParametersSetCounter('1'), parametersSetCounter.count = new BigInt(0) )
-  let count = parametersSetCounter.count
+  let criterionCounter = CriterionCounter.load('1')
+  if (criterionCounter == null) ( criterionCounter = new CriterionCounter('1'), criterionCounter.count = new BigInt(0) )
+  let count = criterionCounter.count
   count = count.plus(ONE)
-  parametersSetCounter.count = count
-  parametersSetCounter.save()
+  criterionCounter.count = count
+  criterionCounter.save()
   return count
 }
 
@@ -72,8 +72,8 @@ export function countWithdrawal () : BigInt {
 }
 
 export function readCriterionCount () : string {
-  let parametersSetCounter = ParametersSetCounter.load('1')
-  return parametersSetCounter ? parametersSetCounter.count.toString() : '1'
+  let criterionCounter = CriterionCounter.load('1')
+  return criterionCounter ? criterionCounter.count.toString() : '1'
 }
 
 export function readDepositCount () : BigInt {

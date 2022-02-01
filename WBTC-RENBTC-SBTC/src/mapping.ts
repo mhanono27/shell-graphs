@@ -1,7 +1,6 @@
 import { 
     BigDecimal,
     BigInt,
-    Entity,
     ethereum,
     log
 } from "@graphprotocol/graph-ts"
@@ -27,14 +26,12 @@ import {
 } from "../generated/Shell/Shell"
 
 import {
-    Transaction,
-    Trade,
-    Deposit, 
-    Withdrawal,
-    Pool,
-    ParametersSet,
+    Criterion,
     Token,
-    WeightTracker
+    Trade,
+    Deposit,
+    WeightsTracker,
+    Withdrawal,
 } from "../generated/schema"
 
 import {
@@ -130,9 +127,9 @@ export function handleAssetIncludedEvent (event: AssetIncludedEvent) : void {
     log.warning("after pool saving", [])
     
     let weight = decimalize(event.params.weight, 18)
-    let weights = WeightTracker.load(SHELL)
+    let weights = WeightsTracker.load(SHELL)
     if (!weights) {
-        weights = new WeightTracker(SHELL)
+        weights = new WeightsTracker(SHELL)
         weights.weights = new Array<BigDecimal>(0)
     }
     log.warning("after weight tracker loading", [])
@@ -212,22 +209,23 @@ export function handleParametersSetEvent (event: ParametersSetEvent) : void {
     
     let count = countCriterion()
     
-    let parametersSet = new ParametersSet(count.toString())
-    parametersSet.count = count
-    parametersSet.alpha = alpha
-    parametersSet.beta = beta
-    parametersSet.delta = delta
-    parametersSet.epsilon = epsilon
-    parametersSet.lambda = lambda
-    parametersSet.timestamp = event.block.timestamp
-    parametersSet.weights = WeightTracker.load(SHELL).weights
+    let criterion = new Criterion(count.toString())
+    criterion.count = count
+    criterion.alpha = alpha
+    criterion.beta = beta
+    criterion.delta = delta
+    criterion.epsilon = epsilon
+    criterion.lambda = lambda
+    criterion.timestamp = event.block.timestamp
+    criterion.weights = WeightsTracker.load(SHELL).weights
     
-    parametersSet.save()
+    criterion.save()
 
 }
 
 
 export function handleProportionalDepositCall (call: ProportionalDepositCall) : void {
+    
     
     let pool = getPool()
     let count = countDeposit()
