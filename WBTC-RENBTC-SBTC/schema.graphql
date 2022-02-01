@@ -3,25 +3,20 @@ type Transaction @entity {
   count: BigInt!
   hash: String!
   index: BigInt!
-  from: String
+  from: String!
   to: String!
   gas_used: BigInt!
   gas_price: BigInt!
-
-  trade: Trade!
-  deposit: Deposit!
-  withdrawal: Withdrawal!
-  pool: Pool!
 }
 
 type Trade @entity {
   id: ID!
   count: BigInt!
   address: Bytes!
-  origin: Token!
+  origin: String!
   origin_amount: BigDecimal!
   origin_amount_numeraire: BigDecimal
-  target: Token!
+  target: String!
   target_amount: BigDecimal!
   target_amount_numeraire: BigDecimal
   timestamp: BigInt!
@@ -45,7 +40,7 @@ type Deposit @entity {
 
   transaction: Transaction!
   parametersSet: ParametersSet!
-  pool: String!
+  pool: Pool!
   utility_frame: UtilityFrame!
 }
 
@@ -83,8 +78,6 @@ type ParametersSet @entity {
   lambda: BigDecimal!
   weights: [BigDecimal!]!
   timestamp: BigInt!
-  
-  pool: Pool!
 }
 
 type Parameters @entity {

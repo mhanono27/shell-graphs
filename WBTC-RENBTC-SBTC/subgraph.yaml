@@ -35,31 +35,31 @@ dataSources:
         - name: cERC20
           file: ./abis/cERC20.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
+        #- event: Approval(indexed address,indexed address,uint256)
+        #  handler: handleApproval
         - event: AssetIncluded(indexed address,indexed address,uint256)
           handler: handleAssetIncluded
-        - event: AssimilatorIncluded(indexed address,indexed address,indexed address,address)
-          handler: handleAssimilatorIncluded
-        - event: FrozenSet(bool)
-          handler: handleFrozenSet
-        - event: OwnershipTransfered(indexed address,indexed address)
-          handler: handleOwnershipTransfered
+        #- event: AssimilatorIncluded(indexed address,indexed address,indexed address,address)
+        #  handler: handleAssimilatorIncluded
+        #- event: FrozenSet(bool)
+        #  handler: handleFrozenSet
+        #- event: OwnershipTransfered(indexed address,indexed address)
+        #  handler: handleOwnershipTransfered
         - event: ParametersSet(uint256,uint256,uint256,uint256,uint256)
           handler: handleParametersSet
-        - event: PartitionRedeemed(indexed address,indexed address,uint256)
-          handler: handlePartitionRedeemed
-        - event: PoolPartitioned(bool)
-          handler: handlePoolPartitioned
-        - event: Trade(indexed address,indexed address,indexed address,uint256,uint256)
-          handler: handleTrade
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
+        #- event: PartitionRedeemed(indexed address,indexed address,uint256)
+        #  handler: handlePartitionRedeemed
+        #- event: PoolPartitioned(bool)
+        #  handler: handlePoolPartitioned
+        #- event: Trade(indexed address,indexed address,indexed address,uint256,uint256)
+        #  handler: handleTrade
+        #- event: Transfer(indexed address,indexed address,uint256)
+        #  handler: handleTransfer
       callHandlers:
         - function: originSwap(address,address,uint256,uint256,uint256)
           handler: handleOriginSwapCall
-        - function: partitionedWithdraw(address[],uint256[])
-          handler: handlePartitionedWithdrawCall
+        #- function: partitionedWithdraw(address[],uint256[])
+        #  handler: handlePartitionedWithdrawCall
         - function: proportionalDeposit(uint256,uint256)
           handler: handleProportionalDepositCall
         - function: proportionalWithdraw(uint256,uint256)
