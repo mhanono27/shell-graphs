@@ -26,11 +26,11 @@ import {
 } from "../generated/Shell/Shell"
 
 import {
-    Criterion,
+    // Criterion,
     Token,
     Trade,
     Deposit,
-    WeightsTracker,
+    WeightTracker,
     Withdrawal,
 } from "../generated/schema"
 
@@ -39,13 +39,13 @@ import {
     getDecimalAmount,
     getNumeraireAmount,
     getPool,
-    saveParameters,
-    saveTransaction,
+    // saveParameters,
+    // saveTransaction,
     saveUtilityFrame,
 } from "./helpers"
 
 import {
-    countCriterion, readCriterionCount,
+    // countCriterion, readCriterionCount,
     countDeposit, readDepositCount,
     countWithdrawal, readWithdrawalCount,
     countUtility, readUtilityTimestamp,
@@ -127,9 +127,9 @@ export function handleAssetIncludedEvent (event: AssetIncludedEvent) : void {
     log.warning("after pool saving", [])
     
     let weight = decimalize(event.params.weight, 18)
-    let weights = WeightsTracker.load(SHELL)
+    let weights = WeightTracker.load(SHELL)
     if (!weights) {
-        weights = new WeightsTracker(SHELL)
+        weights = new WeightTracker(SHELL)
         weights.weights = new Array<BigDecimal>(0)
     }
     log.warning("after weight tracker loading", [])
@@ -168,7 +168,7 @@ export function handleOriginSwapCall (call: OriginSwapCall) : void {
     trade.target_amount = getDecimalAmount(trade.target, target_amount)
     trade.target_amount_numeraire = getNumeraireAmount(trade.target, target_amount)
     
-    saveWithMetadata('origin_swap', trade, call)
+    // saveWithMetadata('origin_swap', trade, call)
 
 }
 export function handleTargetSwapCall (call: TargetSwapCall) : void { 
@@ -195,33 +195,33 @@ export function handleTargetSwapCall (call: TargetSwapCall) : void {
     trade.target_amount = getDecimalAmount(trade.target, target_amount)
     trade.target_amount_numeraire = getNumeraireAmount(trade.target, target_amount)
     
-    saveWithMetadata('target_swap', trade, call)
+    // saveWithMetadata('target_swap', trade, call)
 
 }
 
-export function handleParametersSetEvent (event: ParametersSetEvent) : void { 
+// export function handleParametersSetEvent (event: ParametersSetEvent) : void { 
 
-    let alpha = decimalize(event.params.alpha, 18)
-    let beta = decimalize(event.params.beta, 18)
-    let delta = decimalize(event.params.delta, 18)
-    let epsilon = decimalize(event.params.epsilon, 18)
-    let lambda = decimalize(event.params.lambda, 18)
+//     let alpha = decimalize(event.params.alpha, 18)
+//     let beta = decimalize(event.params.beta, 18)
+//     let delta = decimalize(event.params.delta, 18)
+//     let epsilon = decimalize(event.params.epsilon, 18)
+//     let lambda = decimalize(event.params.lambda, 18)
     
-    let count = countCriterion()
+//     let count = countCriterion()
     
-    let criterion = new Criterion(count.toString())
-    criterion.count = count
-    criterion.alpha = alpha
-    criterion.beta = beta
-    criterion.delta = delta
-    criterion.epsilon = epsilon
-    criterion.lambda = lambda
-    criterion.timestamp = event.block.timestamp
-    criterion.weights = WeightsTracker.load(SHELL).weights
+//     let criterion = new Criterion(count.toString())
+//     criterion.count = count
+//     criterion.alpha = alpha
+//     criterion.beta = beta
+//     criterion.delta = delta
+//     criterion.epsilon = epsilon
+//     criterion.lambda = lambda
+//     criterion.timestamp = event.block.timestamp
+//     criterion.weights = WeightTracker.load(SHELL).weights
     
-    criterion.save()
+//     criterion.save()
 
-}
+// }
 
 
 export function handleProportionalDepositCall (call: ProportionalDepositCall) : void {
@@ -253,7 +253,7 @@ export function handleProportionalDepositCall (call: ProportionalDepositCall) : 
     deposit.tokens = deposit_tokens
     deposit.lp_shares = shells_minted
     
-    saveWithMetadata("proportional_deposit", deposit, call)
+    // saveWithMetadata("proportional_deposit", deposit, call)
     
 }
 
@@ -286,25 +286,25 @@ export function handleProportionalWithdrawCall (call: ProportionalWithdrawCall) 
     withdrawal.tokens = output_tokens_string
     withdrawal.lp_shares = shells_burnt
     
-    saveWithMetadata("proportional_withdrawal", withdrawal, call)
+    // saveWithMetadata("proportional_withdrawal", withdrawal, call)
     
 }
 
-export function saveWithMetadata<T>(type: string, entity: T, call: ethereum.Call) : void {
+// export function saveWithMetadata<T>(type: string, entity: T, call: ethereum.Call) : void {
     
-    entity.type = type
-    entity.transaction = call.transaction.hash.toHexString()
-    entity.parameters = call.block.timestamp.toString()
-    entity.utility_frame = call.block.timestamp.toString()
-    entity.timestamp = call.block.timestamp
-    entity.pool = SHELL
-    entity.save()
+//     entity.type = type
+//     entity.transaction = call.transaction.hash.toHexString()
+//     entity.parameters = call.block.timestamp.toString()
+//     entity.utility_frame = call.block.timestamp.toString()
+//     entity.timestamp = call.block.timestamp
+//     entity.pool = SHELL
+//     entity.save()
     
-    saveParameters(call.block.timestamp)
-    saveTransaction(call.transaction)
-    saveUtilityFrame(call.block)
+//     // saveParameters(call.block.timestamp)
+//     saveTransaction(call.transaction)
+//     saveUtilityFrame(call.block)
 
-}
+// }
 
 export function handleSelectiveDepositCall (call: SelectiveDepositCall) : void {
     
@@ -337,7 +337,7 @@ export function handleSelectiveDepositCall (call: SelectiveDepositCall) : void {
     deposit.tokens = input_tokens_string
     deposit.lp_shares = shellsMinted
     
-    saveWithMetadata("selective_deposit", deposit, call)
+    // saveWithMetadata("selective_deposit", deposit, call)
     
 }
 
@@ -371,7 +371,7 @@ export function handleSelectiveWithdrawCall (call: SelectiveWithdrawCall) : void
     withdrawal.tokens = input_tokens_string
     withdrawal.lp_shares = shellsBurned
     
-    saveWithMetadata("selective_withdrawal", withdrawal, call)
+    // saveWithMetadata("selective_withdrawal", withdrawal, call)
     
 }
     

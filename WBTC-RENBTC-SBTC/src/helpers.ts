@@ -5,7 +5,7 @@ import { cERC20 } from "../generated/Shell/cERC20"
 import { Shell } from "../generated/Shell/Shell"
 
 import {
-    Criterion,
+    // Criterion,
     Token,
     Transaction,
     Pool,
@@ -14,7 +14,7 @@ import {
 } from "../generated/schema"
 
 import {
-    countCriterion, readCriterionCount,
+    // countCriterion, readCriterionCount,
     countDeposit, readDepositCount,
     countWithdrawal, readWithdrawalCount,
     countUtility, readUtilityTimestamp, setUtilityTimestamp,
@@ -24,40 +24,42 @@ import {
 
 import { SHELL, ONE } from "./constants"
 
-export function getPool () : Pool|null {
+export function getPool () : Pool {
     let pool = Pool.load(SHELL)
     if (pool == null) pool = new Pool(SHELL) 
     return pool
 }
 
-export function saveTransaction (_tx: ethereum.Transaction) : void {
-    let hash = _tx.hash.toHexString()
-    let tx = new Transaction(hash)
-    tx.hash = hash
-    tx.count = countTransaction()
-    tx.index = _tx.index
-    tx.from = _tx.from.toHexString()
-    tx.to = _tx.to.toHexString()
-    tx.gas_used = _tx.gasUsed
-    tx.gas_price = _tx.gasPrice
-    tx.save()
-}
+// export function saveTransaction (_tx: ethereum.Transaction) : void {
+//     let hash = _tx.hash.toHexString()
+//     let tx = new Transaction(hash)
+//     tx.hash = hash
+//     tx.count = countTransaction()
+//     tx.index = _tx.index
+//     tx.from = _tx.from.toHexString()
+//     if(_tx.to != null){
+//         tx.to = _tx.to.toHexString()
+//     }
+//     tx.gas_used = _tx.gasUsed
+//     tx.gas_price = _tx.gasPrice
+//     tx.save()
+// }
 
-export function saveParameters (timestamp: BigInt) : void {
-    let parameters = Parameters.load(timestamp.toString())
-    if (parameters == null) {
-        let criterion = Criterion.load(readCriterionCount())
-        parameters = new Parameters(timestamp.toString())
-        parameters.criterion = criterion.id
-        parameters.alpha = criterion.alpha
-        parameters.beta = criterion.beta
-        parameters.delta = criterion.delta
-        parameters.epsilon = criterion.epsilon
-        parameters.lambda = criterion.lambda
-        parameters.weights = criterion.weights
-    }
-    parameters.save()
-}
+// export function saveParameters (timestamp: BigInt) : void {
+//     let parameters = Parameters.load(timestamp.toString())
+//     if (parameters == null) {
+//         let criterion = Criterion.load(readCriterionCount())
+//         parameters = new Parameters(timestamp.toString())
+//         parameters.criterion = criterion.id
+//         parameters.alpha = criterion.alpha
+//         parameters.beta = criterion.beta
+//         parameters.delta = criterion.delta
+//         parameters.epsilon = criterion.epsilon
+//         parameters.lambda = criterion.lambda
+//         parameters.weights = criterion.weights
+//     }
+//     parameters.save()
+// }
 
 export function decimalize ( int_amount: BigInt, decimals: i32) : BigDecimal {
     let scaled_decimal = BigInt.fromI32(10).pow( u8(decimals) ).toBigDecimal()
@@ -66,13 +68,17 @@ export function decimalize ( int_amount: BigInt, decimals: i32) : BigDecimal {
 }
 
 export function getDecimalAmount( address: string , int_amount : BigInt ) : BigDecimal {
-    let decimals = Token.load( address ).decimals
+    let token = Token.load(address);
+    if(token == null) token = new Token('');
+    let decimals = token.decimals
     // let decimals = token.decimals
     return decimalize(int_amount, decimals)
 } 
   
 export function getNumeraireAmount( address: string , int_amount : BigInt ) : BigDecimal {
-    let decimals = Token.load( address ).decimals
+    let token = Token.load(address);
+    if(token == null) token = new Token('');
+    let decimals = token.decimals
     // let decimals = token.decimals.toI32()
     return decimalize(int_amount, decimals)
 } 
@@ -80,6 +86,7 @@ export function getNumeraireAmount( address: string , int_amount : BigInt ) : Bi
 export function getNumeraireBalance (reserveAddr: string) : BigDecimal {
 
     let token = Token.load(reserveAddr)
+    if(token == null) token = new Token('');
     
     // TODO: Compound numeraire calculation requires knowledge of numeraire's decimals
     if (token.name.includes('Compound')) {
@@ -114,6 +121,7 @@ export function getShellSupply () : BigDecimal {
 export function saveUtilityFrame (block: ethereum.Block) : void {
     
     let priorUtilFrame = UtilityFrame.load(readUtilityTimestamp())
+    if(priorUtilFrame == null) priorUtilFrame = new UtilityFrame('');
     
     if (priorUtilFrame.block != block.number) {
 

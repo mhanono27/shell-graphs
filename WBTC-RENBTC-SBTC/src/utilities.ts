@@ -1,5 +1,5 @@
 import {
-  CriterionCounter,
+  // CriterionCounter,
   DepositCounter,
   WithdrawalCounter,
   TradeCounter,
@@ -11,15 +11,15 @@ import {
 import { BigInt } from "@graphprotocol/graph-ts"
 import { ONE } from "./constants"
 
-export function countCriterion () : BigInt {
-  let criterionCounter = CriterionCounter.load('1')
-  if (criterionCounter == null) ( criterionCounter = new CriterionCounter('1'), criterionCounter.count = new BigInt(0) )
-  let count = criterionCounter.count
-  count = count.plus(ONE)
-  criterionCounter.count = count
-  criterionCounter.save()
-  return count
-}
+// export function countCriterion () : BigInt {
+//   let criterionCounter = CriterionCounter.load('1')
+//   if (criterionCounter == null) ( criterionCounter = new CriterionCounter('1'), criterionCounter.count = new BigInt(0) )
+//   let count = criterionCounter.count
+//   count = count.plus(ONE)
+//   criterionCounter.count = count
+//   criterionCounter.save()
+//   return count
+// }
 
 export function countDeposit () : BigInt {
   let depositCounter = DepositCounter.load('1')
@@ -71,10 +71,10 @@ export function countWithdrawal () : BigInt {
   return count
 }
 
-export function readCriterionCount () : string {
-  let criterionCounter = CriterionCounter.load('1')
-  return criterionCounter ? criterionCounter.count.toString() : '1'
-}
+// export function readCriterionCount () : string {
+//   let criterionCounter = CriterionCounter.load('1')
+//   return criterionCounter ? criterionCounter.count.toString() : '1'
+// }
 
 export function readDepositCount () : BigInt {
   let depositCounter = DepositCounter.load('1')

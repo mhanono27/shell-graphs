@@ -63,8 +63,8 @@ type Withdrawal @entity {
 
 type Pool @entity {
   id: ID!
-  reserves: [Token!]
-  numeraires: [Token!]
+  reserves: [Token!]!
+  numeraires: [Token!]!
   parametersSet: ParametersSet
 }
 
