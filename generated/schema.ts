@@ -11,90 +11,15 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class LiquidityPosition extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("timestamp", Value.fromI32(0));
-    this.set("block", Value.fromI32(0));
-    this.set("user", Value.fromString(""));
-    this.set("liquidityTokenBalance", Value.fromBigDecimal(BigDecimal.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save LiquidityPosition entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save LiquidityPosition entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("LiquidityPosition", id.toString(), this);
-    }
-  }
-
-  static load(id: string): LiquidityPosition | null {
-    return changetype<LiquidityPosition | null>(
-      store.get("LiquidityPosition", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get timestamp(): i32 {
-    let value = this.get("timestamp");
-    return value!.toI32();
-  }
-
-  set timestamp(value: i32) {
-    this.set("timestamp", Value.fromI32(value));
-  }
-
-  get block(): i32 {
-    let value = this.get("block");
-    return value!.toI32();
-  }
-
-  set block(value: i32) {
-    this.set("block", Value.fromI32(value));
-  }
-
-  get user(): string {
-    let value = this.get("user");
-    return value!.toString();
-  }
-
-  set user(value: string) {
-    this.set("user", Value.fromString(value));
-  }
-
-  get liquidityTokenBalance(): BigDecimal {
-    let value = this.get("liquidityTokenBalance");
-    return value!.toBigDecimal();
-  }
-
-  set liquidityTokenBalance(value: BigDecimal) {
-    this.set("liquidityTokenBalance", Value.fromBigDecimal(value));
-  }
-}
-
 export class User extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("counter", Value.fromBigInt(BigInt.zero()));
-    this.set("liquidityPositions", Value.fromStringArray(new Array(0)));
     this.set("usdSwapped", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("withdrawals", Value.fromStringArray(new Array(0)));
+    this.set("deposits", Value.fromStringArray(new Array(0)));
+    this.set("shellTransfers", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -123,24 +48,6 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get counter(): BigInt {
-    let value = this.get("counter");
-    return value!.toBigInt();
-  }
-
-  set counter(value: BigInt) {
-    this.set("counter", Value.fromBigInt(value));
-  }
-
-  get liquidityPositions(): Array<string> {
-    let value = this.get("liquidityPositions");
-    return value!.toStringArray();
-  }
-
-  set liquidityPositions(value: Array<string>) {
-    this.set("liquidityPositions", Value.fromStringArray(value));
-  }
-
   get usdSwapped(): BigDecimal {
     let value = this.get("usdSwapped");
     return value!.toBigDecimal();
@@ -148,5 +55,264 @@ export class User extends Entity {
 
   set usdSwapped(value: BigDecimal) {
     this.set("usdSwapped", Value.fromBigDecimal(value));
+  }
+
+  get withdrawals(): Array<string> {
+    let value = this.get("withdrawals");
+    return value!.toStringArray();
+  }
+
+  set withdrawals(value: Array<string>) {
+    this.set("withdrawals", Value.fromStringArray(value));
+  }
+
+  get deposits(): Array<string> {
+    let value = this.get("deposits");
+    return value!.toStringArray();
+  }
+
+  set deposits(value: Array<string>) {
+    this.set("deposits", Value.fromStringArray(value));
+  }
+
+  get shellTransfers(): Array<string> {
+    let value = this.get("shellTransfers");
+    return value!.toStringArray();
+  }
+
+  set shellTransfers(value: Array<string>) {
+    this.set("shellTransfers", Value.fromStringArray(value));
+  }
+}
+
+export class ShellTransfer extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("block", Value.fromBigInt(BigInt.zero()));
+    this.set("shellsTransfered", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("from", Value.fromString(""));
+    this.set("to", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ShellTransfer entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ShellTransfer entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ShellTransfer", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ShellTransfer | null {
+    return changetype<ShellTransfer | null>(store.get("ShellTransfer", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get block(): BigInt {
+    let value = this.get("block");
+    return value!.toBigInt();
+  }
+
+  set block(value: BigInt) {
+    this.set("block", Value.fromBigInt(value));
+  }
+
+  get shellsTransfered(): BigDecimal {
+    let value = this.get("shellsTransfered");
+    return value!.toBigDecimal();
+  }
+
+  set shellsTransfered(value: BigDecimal) {
+    this.set("shellsTransfered", Value.fromBigDecimal(value));
+  }
+
+  get from(): string {
+    let value = this.get("from");
+    return value!.toString();
+  }
+
+  set from(value: string) {
+    this.set("from", Value.fromString(value));
+  }
+
+  get to(): string {
+    let value = this.get("to");
+    return value!.toString();
+  }
+
+  set to(value: string) {
+    this.set("to", Value.fromString(value));
+  }
+}
+
+export class Withdrawal extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("block", Value.fromBigInt(BigInt.zero()));
+    this.set("shellsBurnt", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("user", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Withdrawal entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Withdrawal entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Withdrawal", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Withdrawal | null {
+    return changetype<Withdrawal | null>(store.get("Withdrawal", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get block(): BigInt {
+    let value = this.get("block");
+    return value!.toBigInt();
+  }
+
+  set block(value: BigInt) {
+    this.set("block", Value.fromBigInt(value));
+  }
+
+  get shellsBurnt(): BigDecimal {
+    let value = this.get("shellsBurnt");
+    return value!.toBigDecimal();
+  }
+
+  set shellsBurnt(value: BigDecimal) {
+    this.set("shellsBurnt", Value.fromBigDecimal(value));
+  }
+
+  get user(): string {
+    let value = this.get("user");
+    return value!.toString();
+  }
+
+  set user(value: string) {
+    this.set("user", Value.fromString(value));
+  }
+}
+
+export class Deposit extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("block", Value.fromBigInt(BigInt.zero()));
+    this.set("shellsMinted", Value.fromBigDecimal(BigDecimal.zero()));
+    this.set("user", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Deposit entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Deposit entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Deposit", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Deposit | null {
+    return changetype<Deposit | null>(store.get("Deposit", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get block(): BigInt {
+    let value = this.get("block");
+    return value!.toBigInt();
+  }
+
+  set block(value: BigInt) {
+    this.set("block", Value.fromBigInt(value));
+  }
+
+  get shellsMinted(): BigDecimal {
+    let value = this.get("shellsMinted");
+    return value!.toBigDecimal();
+  }
+
+  set shellsMinted(value: BigDecimal) {
+    this.set("shellsMinted", Value.fromBigDecimal(value));
+  }
+
+  get user(): string {
+    let value = this.get("user");
+    return value!.toString();
+  }
+
+  set user(value: string) {
+    this.set("user", Value.fromString(value));
   }
 }

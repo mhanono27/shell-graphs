@@ -1,6 +1,7 @@
 import { log, BigInt, BigDecimal, Address } from '@graphprotocol/graph-ts'
 
-import {User, LiquidityPosition} from '../generated/schema'
+import {User, ShellTransfer, Withdrawal, Deposit} from '../generated/schema'
+import { Transfer } from '../generated/Shell/Shell'
 
 export let ZERO_BI = BigInt.fromI32(0)
 export let ONE_BI = BigInt.fromI32(1)
@@ -9,32 +10,46 @@ export let ONE_BD = BigDecimal.fromString('1')
 export let BI_18 = BigInt.fromI32(18)
 
 export const zeroAddress = '0x0000000000000000000000000000000000000000'
-
-export function createLiquidityPosition(exchange: Address, user: Address): LiquidityPosition {
-  let id = exchange
-    .toHexString()
-    .concat('-')
-    .concat(user.toHexString())
-  let liquidityTokenBalance = LiquidityPosition.load(id)
-  if (liquidityTokenBalance === null) {
-    liquidityTokenBalance = new LiquidityPosition(id)
-    liquidityTokenBalance.liquidityTokenBalance = ZERO_BD
-    liquidityTokenBalance.user = user.toHexString()
-    liquidityTokenBalance.save()
-  }
-  return liquidityTokenBalance as LiquidityPosition
-}
+export const SHELL: string = "0x8f26D7bAB7a73309141A291525C965EcdEa7Bf42"
 
 export function createUser(address: Address): User {
   let user = User.load(address.toHexString())
   if (user === null) {
     user = new User(address.toHexString())
     user.usdSwapped = ZERO_BD
-    user.counter = ZERO_BI
-    user.liquidityPositions = new Array<string>();
+    user.withdrawals = new Array<string>();
+    user.deposits = new Array<string>();
+    user.shellTransfers = new Array<string>();
     user.save()
   }
-  return user
+  return user as User
+}
+
+export function createTransfer(id: string): ShellTransfer {
+  let transfer = ShellTransfer.load(id)
+  if (transfer === null) {
+    transfer = new ShellTransfer(id)
+    transfer.save()
+  }
+  return transfer as ShellTransfer
+}
+
+export function createWithdrawal(id: string): Withdrawal {
+  let withdrawal = Withdrawal.load(id)
+  if (withdrawal === null) {
+    withdrawal = new Withdrawal(id)
+    withdrawal.save()
+  }
+  return withdrawal as Withdrawal
+}
+
+export function createDeposit(id: string): Deposit {
+  let deposit = Deposit.load(id)
+  if (deposit === null) {
+    deposit = new Deposit(id)
+    deposit.save()
+  }
+  return deposit as Deposit
 }
 
 export function decimalize ( int_amount: BigInt, decimals: i32) : BigDecimal {

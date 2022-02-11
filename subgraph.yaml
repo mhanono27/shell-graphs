@@ -48,4 +48,19 @@ dataSources:
         #  handler: handleTrade
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+      callHandlers:
+        #- function: originSwap(address,address,uint256,uint256,uint256)
+        #  handler: handleOriginSwapCall
+        #- function: partitionedWithdraw(address[],uint256[])
+        #  handler: handlePartitionedWithdrawCall
+        - function: proportionalDeposit(uint256,uint256)
+          handler: handleProportionalDepositCall
+        - function: proportionalWithdraw(uint256,uint256)
+          handler: handleProportionalWithdrawCall
+        - function: selectiveDeposit(address[],uint256[],uint256,uint256)
+          handler: handleSelectiveDepositCall
+        - function: selectiveWithdraw(address[],uint256[],uint256,uint256)
+          handler: handleSelectiveWithdrawCall
+        #- function: targetSwap(address,address,uint256,uint256,uint256)
+        #  handler: handleTargetSwapCall
       file: ./src/mapping.ts
